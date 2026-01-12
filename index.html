@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Ưu tiên tải ảnh intro -->
+<link rel="preload" as="image" href="1.jpg" fetchpriority="high">
+<link rel="preload" as="image" href="2.JPEG">
+<link rel="preload" as="image" href="3.jpg">
+<link rel="preload" as="image" href="4.jpg">
+  <h2>THIỆP MỜI </h2>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  .couple-name{
+  color: #b86b6b;
+  font-size:36px;
+  text-shadow:0 2px 6px rgba(0,0,0,.25);
+}
+
+.invite-text h1,
+.invite-text h2{
+  color:#8b2c2c;
+  text-shadow:0 1px 3px rgba(0,0,0,.2);
+}
+
+h1{
+  color:#a8732a; /* vàng champagne */
+}
+
+h2{
+  color:#7a2f2f; /* đỏ rượu vang */
+}
+
+.btn{
+  background:#7a2f2f;
+}
+
+.btn.blue{
+  background:#3c6e9b;
+}
+
+  .rsvp-note{
+  margin-top:10px;
+  font-size:14px;
+  color:#b86b6b;
+  display:none;
+}
+
+  #rsvpPopup{
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  padding:12px 22px;
+  color:#fff;
+  border-radius:30px;
+  font-weight:bold;
+  display:none;
+  opacity:0;
+  transition:.3s;
+  z-index:4000;
+}
+  .rsvp-no{
+  background:#fdf2f2;
+  border:1px solid #e2a0a0;
+}
+  /* ===== INTRO CINEMATIC ===== */
+  .intro img.show{
+  opacity:1;
+  transform:scale(1) translateY(0);
+}
+  
+.intro img{
+  width:85%;
+  max-width:420px;
+  border-radius:20px;
+  opacity:0;
+  transform:scale(1.05) translateY(10px);
+  transition:
+    opacity 1s ease,
+    transform 1s ease;
+}
+
+  .intro.show{
+  opacity:1;
+  pointer-events:auto;
+}
+.intro{
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(to bottom, #f6e6e6, #d9bcbc);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .8s ease;
+  z-index:1000;
+}
+
+.intro::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at center, transparent 60%, rgba(0,0,0,.6));
+  z-index:0;
+  pointer-events:none;
+}
+.intro-text{
+  margin-top:20px;
+  color:#5a2a2a;
+  font-size:20px;
+  font-style:italic;
+  font-weight:500;
+  text-shadow:0 2px 8px rgba(0,0,0,.25);
+  opacity:0;
+  transform:translateY(10px);
+  transition:opacity 1s ease .3s, transform 1s ease .3s;
+}
+
+.intro-text.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* ===== BASE ===== */
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:
+    linear-gradient(180deg,#fff8f5,#ffffff),
+    radial-gradient(circle at 20% 10%, rgba(255,220,220,.35), transparent 45%),
+    radial-gradient(circle at 80% 30%, rgba(255,235,235,.25), transparent 50%);
+  text-align:center;
+  overflow-x:hidden;
+}
+
+
+
+/* ===== OPEN ===== */
+#openScreen{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(to bottom,#9b3c3c,#6e1f1f);
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+  transition:.6s;
+}
+#openScreen button{
+  padding:14px 30px;
+  border-radius:30px;
+  border:none;
+  font-size:18px;
+}
+
+
+/* ===== CONTENT ===== */
+.container{
+  max-width:650px;
+  margin:auto;
+  padding:30px 20px;
+  display:none;
+  animation:fadeZoom 1s;
+}
+@keyframes fadeZoom{
+  from{opacity:0;transform:scale(.97)}
+  to{opacity:1;transform:scale(1)}
+}
+
+.card{
+  background:rgba(255,255,255,.85);
+  border-radius:18px;
+  padding:22px;
+  margin:22px 0;
+  box-shadow:0 8px 20px rgba(0,0,0,.12);
+}
+
+/* ===== BUTTON ===== */
+.btn{
+  display:inline-block;
+  padding:12px 26px;
+  border-radius:30px;
+  background:#9b3c3c;
+  color:#fff;
+  text-decoration:none;
+  margin:8px;
+}
+
+/* ===== ALBUM ===== */
+.album-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+  gap:12px;
+}
+
+
+.album-grid img{
+  width:100%;
+  aspect-ratio:3 / 4;
+  object-fit:cover;
+
+  /* 🔥 NÉT HƠN TRÊN DESKTOP */
+  image-rendering:-webkit-optimize-contrast;
+  backface-visibility:hidden;
+  transform:translateZ(0);
+  will-change:transform;
+ image-rendering:auto;  
+  transition:transform .35s ease;
+}
+
+/* hover nhẹ – không blur */
+.album-grid img:hover{
+  transform:scale(1.03) translateZ(0);
+}
+
+/* chỉ tăng nét cho PC */
+@media (min-width:1024px){
+  .album-grid img{
+    filter:contrast(1.05) saturate(1.05);
+  }
+}
+
+
+
+/* ===== LIGHTBOX ===== */
+#lightbox{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.9);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:3000;
+}
+#lightbox img{
+  max-width:92%;
+  max-height:92%;
+  border-radius:20px;
+}
+
+/* ===== FLOWER (NHẸ) ===== */
+.flower{
+  position:fixed;
+  top:-30px;
+  pointer-events:none;
+  animation:fall linear forwards;
+}
+@keyframes fall{
+  to{transform:translateY(110vh);opacity:0}
+}
+/* ===== FIX NÚT LIGHTBOX ===== */
+.lb-close,.lb-prev,.lb-next{
+  position:absolute;
+  color:white;
+  font-size:36px;
+  z-index:3100;
+  cursor:pointer;
+  user-select:none;
+}
+.lb-close{top:18px;right:22px}
+.lb-prev{left:14px}
+.lb-next{right:14px}
+/* ===== THỐNG KÊ RSVP ===== */
+.stats{
+  display:flex;
+  justify-content:space-around;
+  margin:20px 10px;
+  padding:15px;
+  background:rgba(255,255,255,.6);
+  border-radius:16px;
+  box-shadow:0 6px 18px rgba(0,0,0,.08);
+}
+
+.stats div{
+  text-align:center;
+}
+
+.stats b{
+  display:block;
+  font-size:26px;
+  color:#7a2f2f;
+}
+
+.stats span{
+  font-size:13px;
+  color:#8a5a5a;
+}
+/* ===== NIGHT SKY ===== */
+.sky{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  z-index:-1;
+}
+/* zoom nhẹ khi chạm trăng */
+.moon.zoom{
+  transform:scale(1.15);
+}
+
+/* ===== WHITE DOTS (đốm trắng) ===== */
+.dot{
+  position:absolute;
+  width:6px;
+  height:6px;
+  background:white;
+  border-radius:50%;
+  opacity:.8;
+  box-shadow:0 0 12px rgba(255,255,255,.8);
+  animation:floatDot linear infinite;
+}
+
+@keyframes floatDot{
+  from{transform:translateY(0)}
+  to{transform:translateY(-120vh)}
+}
+
+/* ===== FOG ===== */
+.fog-layer{
+  position:absolute;
+  bottom:-30%;
+  left:-10%;
+  width:120%;
+  height:80%;
+  background:
+    radial-gradient(circle at center,
+      rgba(255,255,255,.35),
+      rgba(255,255,255,.05),
+      transparent 70%);
+  filter:blur(40px);
+  animation:fogMove 18s linear infinite;
+}
+
+@keyframes fogMove{
+  from{transform:translateY(0)}
+  to{transform:translateY(-40%)}
+}
+
+/* ===== OPEN TRANSITION ===== */
+#openScreen.fade-out .dot,
+#openScreen.fade-out .fog-layer{
+  animation:fadeOut 1.2s ease forwards;
+}
+/* ===== FORCE NIGHT BACKGROUND ===== */
+#openScreen{
+  background:linear-gradient(to bottom,#020924,#040f2f,#000) !important;
+  overflow:hidden;
+}
+/* ===== STAR DOTS ===== */
+.star-layer{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+}
+
+.star-dot{
+  position:absolute;
+  border-radius:50%;
+  background:white;
+  opacity:.8;
+  box-shadow:
+    0 0 6px rgba(255,255,255,.9),
+    0 0 14px rgba(200,220,255,.7);
+  animation:twinkle ease-in-out infinite;
+}
+
+/* sao to hơn */
+.star-dot.big{
+  box-shadow:
+    0 0 10px rgba(255,255,255,1),
+    0 0 28px rgba(180,220,255,.9);
+}
+
+@keyframes twinkle{
+  0%   {opacity:.2; transform:scale(.9)}
+  50%  {opacity:1;  transform:scale(1.6)}
+  100% {opacity:.3; transform:scale(1)}
+}
+.moon{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) scale(1);
+
+  /* 🌕 KÍCH THƯỚC TỐI ƯU MOBILE + DESKTOP */
+  width:clamp(200px, 65vw, 360px);
+  height:clamp(200px, 65vw, 360px);
+
+  border-radius:50%;
+  cursor:pointer;
+
+  background:
+    radial-gradient(circle at 30% 25%, #ffffff 0%, #f2f2f2 35%, #d6d6d6 60%, #bfbfbf 100%),
+    radial-gradient(circle at 70% 65%, rgba(0,0,0,.12), transparent 55%),
+    radial-gradient(circle at 40% 70%, rgba(0,0,0,.18), transparent 50%);
+
+  box-shadow:
+    0 0 20px rgba(255,255,255,.4),
+    0 0 60px rgba(255,255,255,.25);
+
+  transition:
+    transform .8s ease,
+    box-shadow .4s ease;
+}
+
+.moon::after{
+  content:"";
+  position:absolute;
+  inset:-30px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(255,255,255,.35), transparent 70%);
+  opacity:0;
+  transition:opacity .4s ease;
+}
+
+.moon.active{
+  transform:translate(-50%,-50%) scale(1.15);
+  box-shadow:
+    0 0 40px rgba(255,255,255,.9),
+    0 0 120px rgba(255,255,255,.7),
+    0 0 220px rgba(255,255,255,.5);
+}
+
+.moon.active::after{
+  opacity:1;
+}
+.moon.zoom-full{
+  animation:moonZoomFull .9s ease forwards;
+}
+
+@keyframes moonZoomFull{
+  from{
+    transform:translate(-50%,-50%) scale(1);
+  }
+  to{
+    transform:translate(-50%,-50%) scale(6);
+  }
+}
+
+.moon.glow{
+  box-shadow:
+    0 0 60px rgba(255,255,255,1),
+    0 0 160px rgba(255,255,255,.9),
+    0 0 320px rgba(255,255,255,.7);
+}
+
+.moon.glow::after{
+  opacity:1;
+}
+.tap-ripple{
+  position:absolute;
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  background:rgba(255,255,255,.6);
+  transform:translate(-50%,-50%) scale(1);
+  animation:ripple .6s ease forwards;
+  pointer-events:none;
+}
+
+@keyframes ripple{
+  to{
+    transform:translate(-50%,-50%) scale(8);
+    opacity:0;
+  }
+}
+@media (max-width:480px){
+  .moon{
+    width:clamp(180px, 70vw, 240px);
+    height:clamp(180px, 70vw, 240px);
+  }
+}
+/* ===== TỐI ƯU CHO MOBILE ===== */
+@media (max-width: 768px){
+
+  /* Tắt blur + glow nặng */
+  .fog-layer,
+  .moon.glow,
+  .moon::after{
+    display:none !important;
+  }
+
+  /* Giảm shadow */
+  .moon{
+    box-shadow:0 0 20px rgba(255,255,255,.3);
+  }
+
+  /* Tắt animation rơi hoa */
+  .flower{
+    display:none !important;
+  }
+
+  /* Giảm số sao */
+  .star-dot.big{
+    display:none;
+  }
+
+  /* Tắt will-change (rất nóng máy) */
+  .album-grid img{
+    will-change:auto;
+  }
+}
+.avatar{
+  width:180px;
+  height:220px;
+  border-radius:16px;
+  object-fit:cover;
+
+  /* ❌ bỏ GPU hack */
+  transform:none;
+  backface-visibility:visible;
+  will-change:auto;
+
+  /* tăng nét */
+  image-rendering:auto;
+}
+
+
+</style>
+</head>
+<body>
+  <!-- LIGHTBOX PRO -->
+<div id="lightbox">
+  <span class="lb-close" onclick="closeLightbox()">✕</span>
+  <span class="lb-prev" onclick="prevImg()">❮</span>
+  <img id="lightboxImg">
+  <span class="lb-next" onclick="nextImg()">❯</span>
+</div>
+<!-- MUSIC CONTROL -->
+<div id="musicBtn" onclick="toggleMusic()">🔇</div>
+
+<!-- RSVP Popup -->
+<div id="rsvpPopup">Cảm ơn bạn!</div>
+
+<!-- OPEN SCREEN --><!-- INTRO STORY -->
+
+
+<div class="intro" id="intro">
+<img id="introImg" class="intro-img"
+     src="1.jpg"
+     decoding="async"
+     loading="eager"
+     fetchpriority="high">
+<div id="introText" class="intro-text"></div>
+</div>
+<div id="openScreen">
+  <div class="star-layer" id="starLayer"></div>
+  <!-- NIGHT SKY -->
+<div class="sky">
+  <div class="moon"></div>
+  <div class="cloud-layer"></div>
+  <div class="fog-layer"></div>
+</div>
+
+  <div style="font-size:42px">💕</div>
+<h1 class="couple-name">THIỆP MỜI</h1>
+<h1 class="couple-name">Hoàng Anh</h1>
+  <h1 class="couple-name"> & </h1>
+  <h1 class="couple-name">Phạm Nguyệt</h1>
+  <p style="opacity:.8">👆 Chạm để mở thiệp</p>
+</div>
+
+
+<!-- MUSIC -->
+<audio id="bgMusic" loop>
+  <source src="i-do.mp3.mp3" type="audio/mpeg">
+</audio>
+<!-- MAIN CONTENT -->
+<div class="container" id="main">
+<div class="cross">💕</div>
+<div class="invite-text">
+
+  <h2>Trân Trọng Kính Mời Quý Khách</h2>
+  <h2>Đến Tham Dự Đám Cưới Của</h2>
+
+  <h1>Hoàng Anh</h1>
+  <h1>&</h1>
+    <h1>Phạm Nguyệt</h1>
+  <div class="divider"></div>
+
+  <div class="scripture">
+    “Sự gì Thiên Chúa đã kết hợp, loài người không được phân ly.” (Mt 19,6)
+  </div>
+
+  <!-- CÔ DÂU & CHÚ RỂ -->
+  <div style="display:flex;justify-content:space-around;text-align:center">
+  <div>
+    <img src="chu-re.jpg" class="avatar">
+    <p><b>Chú rể<br>Phêrô Hoàng Anh</b></p>
+  </div>
+  <div>
+    <img src="cd.JPEG" class="avatar">
+    <p><b>Cô dâu<br>Maria Phạm Nguyệt</b></p>
+  </div>
+</div>
+
+  <!-- SONG THÂN -->
+  <div style="display:flex;gap:20px;justify-content:space-between;font-size:15px;margin:30px 0;">
+    <div style="width:48%;">
+      <b>Song thân Chú Rể</b><br>
+      Ông: Phêrô Đặng Hữu Đương (+)<br>
+      Bà: Maria Nguyễn Thị Quang
+    </div>
+    <div style="width:48%;">
+      <b>Song thân Cô Dâu</b><br>
+      Ông: Đa-Minh Phạm Văn Niệm<br>
+      Bà: Maria Nguyễn Thị Hiên
+    </div>
+  </div>
+
+  <!-- ALBUM -->
+  <h2>📷 Khoảnh Khắc Hạnh Phúc</h2>
+<div class="album-grid">
+ <img src="5.jpg" loading="lazy" onclick="openLightboxByIndex(0)">
+<img src="6.png" loading="lazy" onclick="openLightboxByIndex(1)">
+<img src="7.jpg" loading="lazy" onclick="openLightboxByIndex(2)">
+<img src="8.PNG" loading="lazy" onclick="openLightboxByIndex(3)">
+<img src="9.jpg" loading="lazy" onclick="openLightboxByIndex(4)">
+<img src="10.PNG" loading="lazy" onclick="openLightboxByIndex(5)">
+</div>
+
+<!-- LỄ -->
+<h2>💒 Lễ Thành Hôn</h2>
+<div class="card">
+🗓 <b>Thứ Tư – 11/02/2026</b><br>
+⏰ <b>16:15</b><br>
+⛪ <b>Nhà thờ Giáo Xứ Phúc Thành</b><br>
+📍 Nam Dong, Cư Jut, Lâm Đồng<br>
+<div id="countdown">⏳ Đang tính thời gian…</div>
+<a class="btn" target="_blank" href="https://maps.app.goo.gl/vDDYBfEG5AXxQDLs7?g_st=ipc">🧭 Chỉ đường Nhà Thờ</a><br>
+<a class="btn blue" target="_blank" href="https://www.google.com/calendar">📅 Thêm vào Google Calendar</a>
+</div>
+
+<!-- TIỆC -->
+<h2>🍽️ Tiệc Nhà Gái</h2>
+<div class="card">
+🗓 <b>Thứ Năm – 12/02/2026</b><br>
+⏰ <b>11:00</b><br>
+📍 Tư gia Nhà Gái<br>
+<a class="btn" target="_blank" href="https://maps.app.goo.gl/imNfpARbGWWLFwrKA?g_st=ipc">🧭 Chỉ đường</a><br>
+<a class="btn blue" target="_blank" href="https://www.google.com/calendar">📅 Thêm vào Google Calendar</a>
+</div>
+  
+<h2>🍽️ Tiệc Nhà Trai</h2>
+<div class="card">
+🗓 <b>Thứ Sáu – 13/02/2026</b><br>
+⏰ <b>11:00</b><br>
+📍 Tư gia Nhà Trai<br>
+<a class="btn" target="_blank" href="https://maps.app.goo.gl/2XV3Rx7Tr8DZPFSn7?g_st=ipc">🧭 Chỉ đường</a><br>
+<a class="btn blue" target="_blank" href="https://www.google.com/calendar">📅 Thêm vào Google Calendar</a>
+</div>
+<!-- RSVP -->
+<h2>📩 Xác Nhận Tham Dự</h2>
+<div class="card" id="rsvpCard">
+<form onsubmit="sendRSVP(event)">
+<input id="rsvpName" placeholder="Tên của bạn" required>
+<select id="rsvpStatus" required onchange="changeRSVPStyle()">
+<option value="">— Vui lòng chọn —</option>
+<option value="yes">✅ Tham dự</option>
+<option value="no">❌ Không tham dự</option>
+</select>
+<div class="rsvp-note" id="prayNote">🙏 Xin hiệp lời cầu nguyện và chúc phúc cho chúng con.</div>
+<button class="btn">Gửi phản hồi</button>
+</form>
+<p style="margin-top:15px;font-weight:bold">👥 Tham dự | ❌ Không tham dự</p>
+<div id="rsvpList" style="font-size:14px;margin-top:10px"></div>
+</div>
+<!-- ===== THỐNG KÊ ===== -->
+<div class="stats">
+  <div>
+    <b id="countYes">0</b>
+    <span>Tham dự</span>
+  </div>
+  <div>
+    <b id="countNo">0</b>
+    <span>Không tham dự</span>
+  </div>
+  <div>
+    <b id="countWish">0</b>
+    <span>Lời chúc</span>
+  </div>
+</div>
+<!-- ===== END THỐNG KÊ ===== -->
+
+<!-- LỜI CHÚC -->
+<h2>💌 Gửi Lời Chúc</h2>
+<form onsubmit="sendWish(event)">
+<input id="wishName" placeholder="Tên của bạn" required>
+<textarea id="wishText" placeholder="Lời chúc" required></textarea>
+<button class="btn">Gửi</button>
+</form>
+<div id="wishList"></div>
+
+<!-- QR -->
+<h2>💳 Mừng Cưới</h2>
+<button class="btn" onclick="toggleQR()">📱 Hiện / Ẩn QR</button>
+<div id="qrBox" style="display:none"><img src="qr-stk.jpg" alt="QR Mừng Cưới" style="width:220px;border-radius:15px"></div>
+
+<footer style="margin:40px 0;color:#777">“Xin Thiên Chúa chúc lành cho tình yêu của chúng con”</footer>
+</div>
+
+<script>
+  const openScreen = document.getElementById("openScreen");
+  document.addEventListener("DOMContentLoaded",()=>{
+  const layer=document.getElementById("starLayer");
+  if(!layer) return;
+
+  const COUNT=60+Math.floor(Math.random()*30); // 60–90
+
+  for(let i=0;i<COUNT;i++){
+    const s=document.createElement("span");
+    s.className="star-dot";
+
+    if(Math.random()<0.35) s.classList.add("big");
+
+    const size=Math.random()<0.35
+      ? 4+Math.random()*3
+      : 2+Math.random()*1.5;
+
+    s.style.width=size+"px";
+    s.style.height=size+"px";
+
+    s.style.top=Math.random()*100+"%";
+    s.style.left=Math.random()*100+"%";
+
+    s.style.animationDuration=2+Math.random()*4+"s";
+    s.style.animationDelay=Math.random()*3+"s";
+
+    layer.appendChild(s);
+  }
+});
+
+  /* ===== DOTS CREATE ===== */
+const sky = document.querySelector(".sky");
+for(let i=0;i<40;i++){
+  const d=document.createElement("div");
+  d.className="dot";
+  d.style.left=Math.random()*100+"vw";
+  d.style.top=100+Math.random()*100+"vh";
+  d.style.animationDuration=12+Math.random()*8+"s";
+  d.style.opacity=Math.random();
+  sky.appendChild(d);
+}
+
+/* ===== MOON INTERACTION ===== */
+const moon=document.querySelector(".moon");
+
+let opened = false;
+
+openScreen.addEventListener("click", e=>{
+  if(opened) return;
+  opened = true;
+
+  moon.classList.add("glow");
+
+  setTimeout(()=>{
+    moon.classList.add("zoom-full");
+    setTimeout(openInvite, 900);
+  },400);
+});
+
+
+  const API_URL="https://script.google.com/macros/s/AKfycbxEhUewtom1-wR7EBfAOscvBaESQkSvtHCyODdLFE1lcatmPHuaXu0VUTOVfMwM23g9/exec";
+  
+const intro = document.getElementById("intro");
+const introImg = document.getElementById("introImg");
+const introText = document.getElementById("introText");
+const main = document.getElementById("main");
+const music = document.getElementById("bgMusic");
+  let musicStarted = false;
+function toggleMusic(){
+  if(!musicStarted){
+    music.play();
+    musicStarted = true;
+    musicBtn.innerText = "🔊";
+  }else if(music.paused){
+    music.play();
+    musicBtn.innerText = "🔊";
+  }else{
+    music.pause();
+    musicBtn.innerText = "🔇";
+  }
+}
+const yesCountEl = document.getElementById("countYes");
+const noCountEl = document.getElementById("countNo");
+const wishCountEl = document.getElementById("countWish");
+
+// ------------------- RSVP -------------------
+const rsvpCard=document.getElementById("rsvpCard"),
+      rsvpStatus=document.getElementById("rsvpStatus"),
+      prayNote=document.getElementById("prayNote"),
+      rsvpName=document.getElementById("rsvpName"),
+      rsvpListEl=document.getElementById("rsvpList");
+
+    
+
+function changeRSVPStyle(){
+  if(rsvpStatus.value==="no"){rsvpCard.classList.add("rsvp-no");prayNote.style.display="block";}
+  else{rsvpCard.classList.remove("rsvp-no");prayNote.style.display="none";}
+}
+
+function showPopup(msg,color="#3c6e9b"){
+  const popup=document.getElementById("rsvpPopup");
+  popup.innerText=msg; popup.style.background=color;
+  popup.style.display="block";setTimeout(()=>{popup.style.opacity=1;},10);
+  setTimeout(()=>{popup.style.opacity=0;setTimeout(()=>popup.style.display="none",300);},2000);
+}
+
+async function sendRSVP(e){
+  e.preventDefault();
+
+  const name = rsvpName.value.trim();
+  const status = rsvpStatus.value;
+
+  if(!name || !status){
+    alert("Vui lòng nhập tên và chọn trạng thái");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("type","rsvp");
+  formData.append("name",name);
+  formData.append("status",status);
+
+  try{
+    await fetch(API_URL,{
+      method:"POST",
+      body: formData
+    });
+
+    rsvpName.value="";
+    rsvpStatus.value="";
+    rsvpCard.classList.remove("rsvp-no");
+    prayNote.style.display="none";
+
+    showPopup(
+      status==="yes"
+        ? "🎉 Cảm ơn bạn đã xác nhận tham dự!"
+        : "🙏 Cảm ơn bạn đã phản hồi & hiệp lời cầu nguyện",
+      status==="yes" ? "#3c6e9b" : "#b86b6b"
+    );
+
+    localStorage.setItem("lastRSVP", name);
+    loadData();
+
+  }catch(err){
+    console.error(err);
+    alert("❌ Lỗi kết nối Google Sheet");
+  }
+}
+
+
+// ------------------- OPEN SCREEN + INTRO -------------------
+
+const story=[
+  {img:"1.jpg",text:"Từ lần gặp gỡ đầu tiên…"},
+  {img:"2.JPEG",text:"Hai trái tim chung nhịp đập…"},
+  {img:"3.jpg",text:"Và hôm nay…"},
+  {img:"4.jpg",text:"Chúng con nên duyên vợ chồng 💍"}
+];
+story.forEach(s=>{
+  const img = new Image();
+  img.src = s.img;
+});
+function openInvite(){
+  // 🔊 bật nhạc hợp lệ cho mobile
+  music.muted = false;
+  music.volume = 0.7;
+
+  const playPromise = music.play();
+  if(playPromise !== undefined){
+    playPromise.then(()=>{
+      musicStarted = true;
+      musicBtn.innerText = "🔊";
+    }).catch(()=>{
+      // nếu vẫn bị chặn, hiện thông báo
+      showPopup("🔊 Chạm lần nữa để bật nhạc");
+    });
+  }
+
+  // hiệu ứng mở thiệp
+  openScreen.style.opacity = "0";
+  setTimeout(()=>{
+    openScreen.style.display = "none";
+    intro.classList.add("show");
+    playStory(0);
+  },600);
+}
+function playStory(i){
+  if(i >= story.length){
+    intro.style.opacity="0";
+    setTimeout(()=>{
+      intro.style.display="none";
+      main.style.display="block";
+    },800);
+    return;
+  }
+
+  introImg.classList.remove("show");
+  introText.classList.remove("show");
+
+  setTimeout(()=>{
+    introImg.src = story[i].img;
+    introText.innerText = story[i].text;
+    introImg.classList.add("show");
+    introText.classList.add("show");
+  },600);
+
+  setTimeout(()=>playStory(i+1),4200);
+}
+
+
+// ------------------- COUNTDOWN (UTC+7) -------------------
+const countdown=document.getElementById("countdown");
+const weddingTime = new Date("2026-02-11T15:30:00+07:00").getTime();
+setInterval(()=>{
+  const d=weddingTime-Date.now();
+  if(d<=0){countdown.innerHTML="🎉 Lễ cưới đã bắt đầu"; return;}
+  const days=Math.floor(d/86400000),
+        h=Math.floor(d%86400000/3600000),
+        m=Math.floor(d%3600000/60000),
+        s=Math.floor(d%60000/1000);
+  countdown.innerHTML=`⏳ Còn ${days} ngày ${h} giờ ${m} phút ${s} giây`;
+},1000);
+
+// ------------------- WISHES -------------------
+const wishList=document.getElementById("wishList"),
+      wishName=document.getElementById("wishName"),
+      wishText=document.getElementById("wishText");
+async function sendWish(e){
+  e.preventDefault();
+
+  const name = wishName.value.trim();
+  const message = wishText.value.trim();
+  if(!name || !message) return;
+
+  const formData = new FormData();
+  formData.append("type","wish");
+  formData.append("name",name);
+  formData.append("message",message);
+
+  await fetch(API_URL,{
+    method:"POST",
+    body: formData
+  });
+
+  wishName.value="";
+  wishText.value="";
+  showPopup("💌 Đã gửi lời chúc!");
+  loadData();
+}
+
+
+
+
+  // ------------------- QR -------------------
+function toggleQR(){
+  const qrBox = document.getElementById("qrBox");
+  qrBox.style.display = qrBox.style.display==="none" ? "block" : "none";
+}
+
+// ------------------- FLOWERS -------------------
+const flowers=["🌸","💮","🌺"];
+
+setInterval(()=>{
+  if(document.hidden) return; // không tạo khi tab ẩn
+  const f=document.createElement("div");
+  f.className="flower";
+  f.textContent=["🌸","💮","🌺"][Math.random()*3|0];
+  f.style.left=Math.random()*100+"vw";
+  f.style.fontSize=14+Math.random()*10+"px";
+  f.style.animationDuration=10+Math.random()*6+"s";
+  document.body.appendChild(f);
+  setTimeout(()=>f.remove(),16000);
+},1800);
+
+const albumImgs = Array.from(document.querySelectorAll(".album-grid img"));
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightboxImg");
+let currentIndex = 0;
+
+function openLightboxByIndex(index){
+  currentIndex = index;
+  lightboxImg.src = albumImgs[currentIndex].src;
+  lightbox.style.display = "flex";
+}
+
+function closeLightbox(){
+  lightbox.style.display = "none";
+}
+
+function nextImg(){
+  currentIndex = (currentIndex + 1) % albumImgs.length;
+  lightboxImg.src = albumImgs[currentIndex].src;
+}
+
+function prevImg(){
+  currentIndex = (currentIndex - 1 + albumImgs.length) % albumImgs.length;
+  lightboxImg.src = albumImgs[currentIndex].src;
+}
+
+/* Click ra ngoài để thoát */
+lightbox.addEventListener("click",e=>{
+  if(e.target === lightbox) closeLightbox();
+});
+
+/* Vuốt điện thoại */
+let startX = 0;
+let isPinching = false;
+
+lightbox.addEventListener("touchstart", e=>{
+  // nếu có từ 2 ngón trở lên → đang zoom → bỏ qua swipe
+  if(e.touches.length > 1){
+    isPinching = true;
+    return;
+  }
+  isPinching = false;
+  startX = e.touches[0].clientX;
+});
+
+lightbox.addEventListener("touchend", e=>{
+  // nếu vừa zoom thì KHÔNG đổi ảnh
+  if(isPinching) return;
+
+  const diff = e.changedTouches[0].clientX - startX;
+  if(diff > 60) prevImg();
+  if(diff < -60) nextImg();
+});
+
+async function loadData(){
+  let yes = 0, no = 0, wish = 0;
+
+  const res = await fetch(API_URL);
+  const data = await res.json();
+
+  // ===== RSVP =====
+  rsvpListEl.innerHTML = "";
+  const lastName = localStorage.getItem("lastRSVP");
+
+  data.rsvp.slice().reverse().forEach(r=>{
+    const div = document.createElement("div");
+
+    div.style.display = "flex";
+    div.style.justifyContent = "space-between";
+    div.style.alignItems = "center";
+    div.style.padding = "8px 6px";
+    div.style.borderBottom = "1px dashed #ddd";
+    div.style.fontSize = "14px";
+
+    const isYes = r[2] === "yes";
+
+    div.innerHTML = `
+      <span>${isYes ? "✅" : "❌"} <b>${r[1]}</b></span>
+      <span style="color:${isYes ? "#3c6e9b" : "#b86b6b"}">
+        ${isYes ? "Tham dự" : "Không tham dự"}
+      </span>
+    `;
+
+    if (r[1] === lastName) {
+      div.style.background = "#fff6e5";
+      div.style.borderRadius = "8px";
+      div.style.fontWeight = "bold";
+    }
+
+    rsvpListEl.appendChild(div);
+
+    isYes ? yes++ : no++;
+  });
+
+  // HIỂN THỊ SỐ RSVP
+  yesCountEl.innerText = yes;
+  noCountEl.innerText = no;
+
+  // ===== WISH =====
+  wishList.innerHTML = "";
+
+  data.wish.slice().reverse().forEach(w=>{
+    wish++; // ✅ ĐẾM LỜI CHÚC
+
+    const div = document.createElement("div");
+    div.style.margin = "10px 0";
+    div.style.padding = "10px";
+    div.style.background = "#fff";
+    div.style.borderRadius = "10px";
+    div.style.boxShadow = "0 4px 10px rgba(0,0,0,.08)";
+    div.innerHTML = `<b>${w[1]}</b><br>${w[2]}`;
+
+    wishList.appendChild(div);
+  });
+
+  // HIỂN THỊ SỐ LỜI CHÚC
+  wishCountEl.innerText = wish;
+}
+
+setTimeout(loadData, 800);
+document.addEventListener("touchstart",()=>{
+  if(!musicStarted){
+    music.muted = false;
+    music.play().then(()=>{
+      musicStarted = true;
+      musicBtn.innerText="🔊";
+    }).catch(()=>{});
+  }
+},{once:true});
+</script>
+</body>
+</html>
