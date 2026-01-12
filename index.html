@@ -635,7 +635,6 @@ body{
 📍 Nam Dong, Cư Jut, Lâm Đồng<br>
 <div id="countdown">⏳ Đang tính thời gian…</div>
 <a class="btn" target="_blank" href="https://maps.app.goo.gl/vDDYBfEG5AXxQDLs7?g_st=ipc">🧭 Chỉ đường Nhà Thờ</a><br>
-<a class="btn blue" target="_blank" href="https://www.google.com/calendar">📅 Thêm vào Google Calendar</a>
 </div>
 <h2>🍽️ Tiệc Nhà Trai</h2>
 <div class="card">
@@ -643,8 +642,10 @@ body{
 ⏰ <b>11:00</b><br>
 📍 Tư gia Nhà Trai<br>
 <a class="btn" target="_blank" href="https://maps.app.goo.gl/2XV3Rx7Tr8DZPFSn7?g_st=ipc">🧭 Chỉ đường</a><br>
-<a class="btn blue" target="_blank" href="https://www.google.com/calendar">📅 Thêm vào Google Calendar</a>
 </div>
+  <a href="#" id="addCalendar" class="btn-calendar btn blue">
+  📅 Thêm tất cả lịch cưới
+</a>
 <!-- RSVP -->
 <h2>📩 Xác Nhận Tham Dự</h2>
 <div class="card" id="rsvpCard">
@@ -696,6 +697,18 @@ body{
 </div>
 
 <script>
+  document.addEventListener("DOMContentLoaded",()=>{
+  const btn = document.getElementById("addCalendar");
+  if(!btn) return;
+
+  btn.addEventListener("click", function(e){
+    e.preventDefault();
+
+    // 🔥 Dùng chung 1 cách cho mọi thiết bị
+    // iPhone, Android, PC đều mở được file .ics
+    window.location.href = "wedding-all.ics";
+  });
+});
   const openScreen = document.getElementById("openScreen");
   document.addEventListener("DOMContentLoaded",()=>{
   const layer=document.getElementById("starLayer");
